@@ -10,7 +10,7 @@ for algo in algos:
 #SBATCH -e sieve{AG}_{N}.err
 #SBATCH -J sieve{AG}_{N}
 #SBATCH -N {N}
-#SBATCH -t 02:00:00
+#SBATCH -t 00:03:00
 
 module load mpich-3.2.1/gcc-4.8.5
 
