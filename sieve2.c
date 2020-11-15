@@ -57,19 +57,84 @@ int main (int argc, char *argv[])
       last array elements */
 
    /* Add you code here  */
+   low_value = 2 + BLOCK_LOW(id, size, n-1);
+    high_value = 2 + BLOCK_HIGH(id, size, n-1);
+    // size = BLOCK_SIZE(id, size, n-1);
+    low_value = low_value + (low_value + 1) % 2;
+    high_value = high_value - (high_value + 1) % 2;
+    size = (high_value - low_value) / 2 + 1;
+    local_size  = (int)sqrt((double)(n)) - 1;
+    
+    /**
+     * process 0 must holds all primes used
+     */
+    proc0_size = (n/2 - 1) / size;
+    if ((2 + proc0_size) < (int) sqrt((double) n/2))
+    {
+        if (id == 0)
+            printf("Too many processes.\n");
+        MPI_Finalize();
+        exit(1);
+    }
 
+    /**
+     * Allocation
+     */
+    marked = (char*) malloc(size);
+    local_marked = (char *) malloc (local_size);
+    if (marked == NULL || local_marked == NULL)
+    {
+        printf("PID: %d - Cannot allocate enough memory.\n", id);
+        MPI_Finalize();
+        exit(1);
+    }
 
+    /**
+     * Core Function
+     */
+    local_prime = 2;
+    for (i = 0; i < local_size; i++)
+        local_marked[i] = 0;
+    index = 0;
+    do
+    {
+        local_first = local_prime * local_prime - 2;
+        for (i = local_first; i < local_size; i += local_prime)
+            local_marked[i] = 1;
+        while (local_marked[++index] == 1);
+        local_prime = 2 + index;
+    } while (local_prime * local_prime <= n);
+    
 
-
-
-
-
-
-
-
-
-
-
+    for (i = 0; i < size; i++)
+        marked[i] = 0;
+    index = 0;
+    prime = 3;
+    do
+    {
+        if (prime * prime > low_value)
+            first = (prime * prime - low_value) / 2;
+        else
+        {
+            if ((low_value % prime) == 0)
+                first = 0;
+            else
+                first = (prime - (low_value % prime) + low_value / prime % 2 * prime) / 2;
+        }
+        for (i = first; i < size; i += prime)
+            marked[i] = 1;
+        while(local_marked[++index] == 1);
+        prime = index + 2;
+    } while (prime * prime <= n);
+    count = 0;
+    for (i = 0; i < size; i++)
+        if (marked[i] == 0)
+            count++;
+    if (id == 0)
+        count++;    // 2
+    if (size > 1)
+        MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    
 
 
    /* Stop the timer */
@@ -87,3 +152,12 @@ int main (int argc, char *argv[])
    return 0;
 }
 
+
+int  BLOCK_LOW(id, p, n) { 
+   return ((id) * (n) / (p));
+}
+
+
+int  BLOCK_HIGH(id, p, n) {
+  return (BLOCK_LOW((id)+1, p, n) - 1);
+}
