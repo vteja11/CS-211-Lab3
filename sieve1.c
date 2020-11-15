@@ -42,8 +42,8 @@ int main (int argc, char *argv[])
    /* Stop the timer */
 
    /* Add you code here  */
-   low_value = 2 + BLOCK_LOW(pid, psize, n-1);
-    high_value = 2 + BLOCK_HIGH(pid, psize, n-1);
+   low_value = 2 + BLOCK_LOW(id, psize, n-1);
+    high_value = 2 + BLOCK_HIGH(id, psize, n-1);
     // size = BLOCK_SIZE(pid, psize, n-1);
     low_value = low_value + (low_value + 1) % 2;
     high_value = high_value - (high_value + 1) % 2;
