@@ -110,15 +110,6 @@ int main (int argc, char *argv[])
         count++;    // 2
     if (size > 1)
         MPI_Reduce(&count, &global_count, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    
-
-
-
-
-
-
-
-
 
 
    elapsed_time += MPI_Wtime();
@@ -134,3 +125,11 @@ int main (int argc, char *argv[])
    return 0;
 }
 
+long long int BLOCK_LOW(id, p, n) { 
+   return ((id) * (n) / (p))
+}
+
+
+long long int BLOCK_HIGH(id, p, n) {
+  return (BLOCK_LOW((id)+1, p, n) - 1)
+}
