@@ -125,11 +125,13 @@ int main (int argc, char *argv[])
    return 0;
 }
 
-long  BLOCK_LOW(id, p, n) { 
+//utils
+
+int  BLOCK_LOW(id, p, n) { 
    return ((id) * (n) / (p));
 }
 
 
-long  BLOCK_HIGH(id, p, n) {
+int  BLOCK_HIGH(id, p, n) {
   return (BLOCK_LOW((id)+1, p, n) - 1);
 }
