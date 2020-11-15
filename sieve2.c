@@ -63,7 +63,7 @@ int main (int argc, char *argv[])
     low_value = low_value + (low_value + 1) % 2;
     high_value = high_value - (high_value + 1) % 2;
     size = (high_value - low_value) / 2 + 1;
-    local_size  = (int)sqrt((double)(n)) - 1;
+    local_prime_size  = (int)sqrt((double)(n)) - 1;
     
     /**
      * process 0 must holds all primes used
@@ -81,8 +81,8 @@ int main (int argc, char *argv[])
      * Allocation
      */
     marked = (char*) malloc(size);
-    local_marked = (char *) malloc (local_size);
-    if (marked == NULL || local_marked == NULL)
+    local_prime_marked = (char *) malloc (local_prime_size);
+    if (marked == NULL || local_prime_marked == NULL)
     {
         printf("PID: %d - Cannot allocate enough memory.\n", id);
         MPI_Finalize();
@@ -93,15 +93,15 @@ int main (int argc, char *argv[])
      * Core Function
      */
     local_prime = 2;
-    for (i = 0; i < local_size; i++)
-        local_marked[i] = 0;
+    for (i = 0; i < local_prime_size; i++)
+        local_prime_marked[i] = 0;
     index = 0;
     do
     {
         local_first = local_prime * local_prime - 2;
-        for (i = local_first; i < local_size; i += local_prime)
-            local_marked[i] = 1;
-        while (local_marked[++index] == 1);
+        for (i = local_first; i < local_prime_size; i += local_prime)
+            local_prime_marked[i] = 1;
+        while (local_prime_marked[++index] == 1);
         local_prime = 2 + index;
     } while (local_prime * local_prime <= n);
     
@@ -123,7 +123,7 @@ int main (int argc, char *argv[])
         }
         for (i = first; i < size; i += prime)
             marked[i] = 1;
-        while(local_marked[++index] == 1);
+        while(local_prime_marked[++index] == 1);
         prime = index + 2;
     } while (prime * prime <= n);
     count = 0;
