@@ -57,8 +57,9 @@ int main (int argc, char *argv[])
       last array elements */
 
    /* Add you code here  */
-   low_value = 2 + BLOCK_LOW(id, size, n-1);
-    high_value = 2 + BLOCK_HIGH(id, size, n-1);
+
+    low_value = 2 + id * (n - 1) / p;
+    high_value = 1 + (id + 1) * (n - 1) / p;
     // size = BLOCK_SIZE(id, size, n-1);
     low_value = low_value + (low_value + 1) % 2;
     high_value = high_value - (high_value + 1) % 2;
