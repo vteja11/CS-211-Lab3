@@ -68,7 +68,7 @@ int main (int argc, char *argv[])
     /**
      * process 0 must holds all primes used
      */
-    proc0_size = (n/2 - 1) / size;
+    proc0_size = (n/2 - 1) / p;
     if ((2 + proc0_size) < (int) sqrt((double) n/2))
     {
         if (id == 0)
