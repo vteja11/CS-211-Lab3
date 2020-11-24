@@ -51,9 +51,11 @@ int main (int argc, char *argv[])
    }
 
    n = atoll(argv[1]);
+
    low_value = 2 + id * (n - 1) / p;
    high_value = 1 + (id + 1) * (n - 1) / p;
-    // size = BLOCK_SIZE(id, size, n-1);
+
+
     low_value = low_value + (low_value + 1) % 2;
     high_value = high_value - (high_value + 1) % 2;
     size = (high_value - low_value) / 2 + 1;
@@ -79,7 +81,7 @@ int main (int argc, char *argv[])
     local_prime_marked = (char *) malloc (local_prime_size);
     if (marked == NULL || local_prime_marked == NULL)
     {
-        printf("Process_ID: %d - Cannot allocate enough memory.\n", id);
+        printf("Cannot allocate enough memory.\n");
         MPI_Finalize();
         exit(1);
     }
@@ -166,11 +168,3 @@ int main (int argc, char *argv[])
 }
 
 
-int  BLOCK_LOW(id, p, n) { 
-   return ((id) * (n) / (p));
-}
-
-
-int  BLOCK_HIGH(id, p, n) {
-  return (BLOCK_LOW((id)+1, p, n) - 1);
-}

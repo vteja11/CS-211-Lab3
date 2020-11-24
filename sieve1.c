@@ -39,20 +39,22 @@ int main (int argc, char *argv[])
    }
 
    n = atoll(argv[1]);
-   /* Stop the timer */
 
-   /* Add you code here  */
+    /* Figure out this process's share of the array, as
+       well as the integers represented by the first and
+       last array elements */
+   
    low_value = 2 + id * (n - 1) / p;
    high_value = 1 + (id + 1) * (n - 1) / p;
 
-    // size = BLOCK_SIZE(pid, size, n-1);
+    // first and last odd numbers
     low_value = low_value + (low_value + 1) % 2;
     high_value = high_value - ((high_value + 1) % 2);
+
+    // new size by new high and low
     size = (high_value - low_value) / 2 + 1;
     
-    /**
-     * process 0 must holds all primes used
-     */
+    
     proc0_size = (n/2 - 1) / p;
 
     if ((2 + proc0_size) < (int) sqrt((double) n/2))
@@ -69,14 +71,14 @@ int main (int argc, char *argv[])
     marked = (char*) malloc(size);
     if (marked == NULL)
     {
-        printf("Pid: %d - Cannot allocate enough memory.\n", id);
+        printf("Cannot allocate enough memory in seive 1.");
         MPI_Finalize();
         exit(1);
     }
     for (i = 0; i < size; i++)
         marked[i] = 0;
 
-    /**
+    /**  
      * Core Function
      */
     if (id == 0)
@@ -125,15 +127,4 @@ int main (int argc, char *argv[])
    }
    MPI_Finalize ();
    return 0;
-}
-
-//utils
-
-int  BLOCK_LOW(id, p, n) { 
-   return ((id) * (n) / (p));
-}
-
-
-int  BLOCK_HIGH(id, p, n) {
-  return (BLOCK_LOW((id)+1, p, n) - 1);
 }
